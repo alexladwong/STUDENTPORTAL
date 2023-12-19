@@ -44,3 +44,8 @@ def delete_notes(request, pk=None):
 # Note Details
 class NotesDetailView(generic.DetailView):
     model = Notes
+
+
+# Home Work Item
+def homework(request):
+    return render(request, "dashboardApp/homework.html")

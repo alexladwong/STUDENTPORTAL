@@ -1,26 +1,27 @@
-{% extends 'dashboard/base.html' %} 
-{% load static %} 
-{% block content %}
+{% extends 'dashboardApp/base.html' %} {% load static %} {% block content %}
 
-<section class='text-center container'>
+<section class="text-center container">
+  <div class="container">
+    <div class="content-section p-5 mt-5">
+      <div class="m-10">
+        <h2>{{notes.title}}</h2>
+      </div>
 
-    <div class="container">
-
-        <div class="content-section p-0 mt-5">
-
-            <div class="m-3">
-                <h2>Title</h2>
-            </div>
-
-            <hr class="p-0 m-0">
-            <p class="description m-5 p-5">
-                Description
-            </p>
-            <hr>
-        </div>
-
+      <hr class="p-10 m-0" />
+      <p class="description m-5 p-8">{{notes.description}}</p>
+      <hr />
+      <a
+        href="/notes"
+        style="
+          padding: 100px;
+          color: blue;
+          text-decoration: underline;
+          font-size: 16px;
+        "
+        ><<< Back</a
+      >
     </div>
-
+  </div>
 </section>
 
 {% endblock content %}

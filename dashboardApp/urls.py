@@ -8,4 +8,8 @@ urlpatterns = [
     path(
         "notes-details/<int:pk>", views.NotesDetailView.as_view(), name="notes_details"
     ),
+    path("homework/", views.homework, name="homework"),
+    path("update-homework/<int:pk>", views.update_homework, name="update_homework"),
+    path("delete-homework/<int:pk>", views.delete_homework, name="delete_homework"),
+    path("youtube-research", views.youtube_researcher, name="youtube_researcher"),
 ]

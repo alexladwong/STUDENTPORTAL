@@ -1,7 +1,7 @@
 {% extends 'dashboardApp/base.html' %} {% load static %} {% block content %}
 
 <section class="container text-center">
-  <h3>Welcome</h3>
+  <h3>Welcome '{request.user.username}'</h3>
 
   <hr />
   <br />
@@ -24,7 +24,7 @@
     </div>
 
     <div class="col-md-3">
-      <a href="#">
+      <a href="{% url 'homework' %}">
         <div class="card">
           <img
             class="card-img-top"
@@ -40,7 +40,7 @@
       </a>
     </div>
     <div class="col-md-3">
-      <a href="#">
+      <a href="{% url 'youtube_researcher' %}">
         <div class="card">
           <img
             class="card-img-top"

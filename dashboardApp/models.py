@@ -19,3 +19,19 @@ class Notes(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
+
+
+class Homework(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    due_date = models.DateTimeField()
+    is_finished = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ("-due_date", "-created")
+
+    def __str__(self):
+        return "{}".format(self.title)

@@ -140,3 +140,59 @@ def youtube_researcher(request):
         form = DashboardForm()
     context = {"form": form}
     return render(request, "dashboardApp/youtube.html", context)
+
+
+# Add todo Application
+def todo(request):
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            try:
+                finished = request.POST["is_finished"]
+                if finished == "on":
+                    finished = True
+                else:
+                    finished = False
+            except:
+                finished = False
+            todos = Todo(
+                user=request.user, title=request.POST["title"], is_finished=finished
+            )
+            todos.save()
+            messages.success(
+                request, f"{request.user.username}: You added New Todo successfully!!!"
+            )
+    else:
+        form = TodoForm()
+    todo = Todo.objects.filter(user=request.user)
+    if len(todo) == 0:
+        todos_done = True
+    else:
+        todos_done = False
+    # todo = Todo.objects.all()
+    context = {
+        "form": form,
+        "todos": todo,
+        "todos_done": todos_done,
+    }
+    return render(request, "dashboardApp/todo.html", context)
+
+
+# Update Todo
+def update_todo(request, pk=None):
+    todo = Todo.objects.get(id=pk)
+    if todo.is_finished == True:
+        todo.is_finished = False
+    else:
+        todo.is_finished = True
+    todo.save()
+    return redirect("todo")
+
+
+# Delete Todo
+def delete_todo(request, pk=None):
+    Todo.objects.get(id=pk).delete()
+    messages.success(
+        request, f"Notes has been deleted successfully, {request.user.username} !"
+    )
+    return redirect("todo")

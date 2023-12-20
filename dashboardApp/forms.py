@@ -21,3 +21,10 @@ class HomeworkForm(forms.ModelForm):
 
 class DashboardForm(forms.Form):
     text = forms.CharField(max_length=100, label="Enter your Search : ")
+
+
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        widgets = {"created": DateInput()}
+        fields = ["title", "is_finished"]

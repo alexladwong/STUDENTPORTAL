@@ -27,4 +27,5 @@ class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
         widgets = {"created": DateInput()}
-        fields = ["title", "is_finished"]
+        fields = "__all__"
+        exclude = ["user"]

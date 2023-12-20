@@ -26,7 +26,7 @@ class Homework(models.Model):
     subject = models.CharField(max_length=100)
     title = models.CharField(max_length=200)
     description = models.TextField()
-    created = models.DateTimeField(auto_now_add=False)
+    created = models.DateTimeField(auto_now_add=True)
     due_date = models.DateTimeField()
     is_finished = models.BooleanField(default=False)
 
@@ -39,8 +39,8 @@ class Homework(models.Model):
 
 class Todo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    tasks = models.TextField()
+    title = models.CharField(max_length=100)
+    tasks = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
     is_finished = models.BooleanField(default=False)
 

@@ -103,7 +103,7 @@ def update_homework(request, pk=None):
 # Delete Homework
 def delete_homework(request, pk=None):
     Homework.objects.get(id=pk).delete()
-    messages.success(
+    messages.warning(
         request, f"Notes has been deleted successfully, {request.user.username} !"
     )
     return redirect("homework")
@@ -165,6 +165,7 @@ def todo(request):
     else:
         form = TodoForm()
     todo = Todo.objects.filter(user=request.user)
+    # todos = Todo.objects.all()
     if len(todo) == 0:
         todos_done = True
     else:
@@ -192,7 +193,11 @@ def update_todo(request, pk=None):
 # Delete Todo
 def delete_todo(request, pk=None):
     Todo.objects.get(id=pk).delete()
-    messages.success(
-        request, f"Notes has been deleted successfully, {request.user.username} !"
+    messages.warning(
+        request, f"Task has been deleted successfully, {request.user.username} !"
     )
     return redirect("todo")
+
+
+def Library(request):
+    return render(request, "dashboardApp/books.html")

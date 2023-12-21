@@ -3,6 +3,17 @@
 {% load crispy_forms_tags %}
 
 <div class="container">
+  <h3>
+    Welcome to your Notes project,
+    <i
+      style="
+        text-transform: capitalize;
+        text-decoration: underline;
+        color: blueviolet;
+      "
+      >{{request.user}}</i
+    >
+  </h3>
   <div class="row">
     {% for notes in notes %}
     <div class="col-md-3 pt-4 bg-transparent">

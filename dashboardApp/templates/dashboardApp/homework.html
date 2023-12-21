@@ -2,6 +2,17 @@
 <!-- Load crispy form -->
 {% load crispy_forms_tags %}
 <div class="container">
+  <h3>
+    Welcome back,
+    <i
+      style="
+        text-transform: capitalize;
+        text-decoration: underline;
+        color: blueviolet;
+      "
+      >{{request.user}}</i
+    >
+  </h3>
   {% if not homework_done %}
 
   <table class="table table-striped table-bordered table-hover table-dark">

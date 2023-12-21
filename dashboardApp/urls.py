@@ -16,4 +16,6 @@ urlpatterns = [
     path("update-todo/<int:pk>", views.update_todo, name="update_todo"),
     path("delete-todo/<int:pk>", views.delete_todo, name="delete_todo"),
     path("library/", views.Library, name="library"),
+    path("dictionary/", views.get_dictionaries, name="dictionary"),
+    path("s-wikipedia/", views.wikipedia, name="wikipedia"),
 ]

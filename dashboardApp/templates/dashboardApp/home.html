@@ -1,7 +1,17 @@
 {% extends 'dashboardApp/base.html' %} {% load static %} {% block content %}
 
 <section class="container text-center">
-  <h3>Welcome, {{request.user.username}}</h3>
+  <h3>
+    Welcome,
+    <i
+      style="
+        text-transform: capitalize;
+        text-decoration: underline;
+        color: blueviolet;
+      "
+      >{{request.user}}</i
+    >
+  </h3>
 
   <hr />
   <br />
@@ -89,7 +99,7 @@
     </div>
 
     <div class="col-md-3">
-      <a href="#">
+      <a href="{% url 'dictionary' %}">
         <div class="card">
           <img
             class="card-img-top"
@@ -105,7 +115,7 @@
       </a>
     </div>
     <div class="col-md-3">
-      <a href="#">
+      <a href="{% url 'wikipedia' %}">
         <div class="card">
           <img
             class="card-img-top"

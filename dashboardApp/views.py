@@ -1,8 +1,10 @@
 from django.shortcuts import redirect, render
+import requests
 from .forms import *
 from django.contrib import messages
 from django.views import generic
 from youtubesearchpython import VideosSearch
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -11,6 +13,7 @@ def home(request):
 
 
 # Create Notes views here.
+@login_required()
 def notes(request):
     if request.method == "POST":
         forms = NotesForm(request.POST)
@@ -34,6 +37,7 @@ def notes(request):
 
 
 # Delete notes
+@login_required()
 def delete_notes(request, pk=None):
     Notes.objects.get(id=pk).delete()
     messages.success(
@@ -48,6 +52,7 @@ class NotesDetailView(generic.DetailView):
 
 
 # Home Work Item
+@login_required()
 def homework(request):
     if request.method == "POST":
         forms = HomeworkForm(request.POST)
@@ -89,6 +94,7 @@ def homework(request):
 
 
 # Update Homework
+@login_required()
 def update_homework(request, pk=None):
     homeworks = Homework.objects.get(id=pk)
 
@@ -101,6 +107,7 @@ def update_homework(request, pk=None):
 
 
 # Delete Homework
+@login_required()
 def delete_homework(request, pk=None):
     Homework.objects.get(id=pk).delete()
     messages.warning(
@@ -110,6 +117,7 @@ def delete_homework(request, pk=None):
 
 
 # Youtube Researcher
+@login_required()
 def youtube_researcher(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -143,6 +151,7 @@ def youtube_researcher(request):
 
 
 # Add todo Application
+@login_required()
 def todo(request):
     if request.method == "POST":
         form = TodoForm(request.POST)
@@ -164,8 +173,8 @@ def todo(request):
             )
     else:
         form = TodoForm()
-    todo = Todo.objects.filter(user=request.user)
-    # todos = Todo.objects.all()
+    # todo = Todo.objects.filter(user=request.user)
+    todo = Todo.objects.all()
     if len(todo) == 0:
         todos_done = True
     else:
@@ -180,6 +189,7 @@ def todo(request):
 
 
 # Update Todo
+@login_required()
 def update_todo(request, pk=None):
     todo = Todo.objects.get(id=pk)
     if todo.is_finished == True:
@@ -191,6 +201,7 @@ def update_todo(request, pk=None):
 
 
 # Delete Todo
+@login_required()
 def delete_todo(request, pk=None):
     Todo.objects.get(id=pk).delete()
     messages.warning(
@@ -199,5 +210,90 @@ def delete_todo(request, pk=None):
     return redirect("todo")
 
 
+# Google Books
+@login_required()
 def Library(request):
-    return render(request, "dashboardApp/books.html")
+    if request.method == "POST":
+        form = DashboardForm(request.POST)
+        text = request.POST.get("text", "")
+        url = "https://www.googleapis.com/books/v1/volumes?q=" + text
+        r = requests.get(url)
+        answer = r.json()
+
+        # Use a list comprehension for better readability
+        result_list = [
+            {
+                "title": item["volumeInfo"]["title"],
+                "subtitle": item["volumeInfo"].get("subtitle", ""),
+                "description": item["volumeInfo"].get("description", ""),
+                "count": item["volumeInfo"].get("pageCount", 0),
+                "category": item["volumeInfo"].get("categories", []),
+                "rating": item["volumeInfo"].get(
+                    "averageRating", 0
+                ),  # Change to the correct attribute if needed
+                "thumbnail": item["volumeInfo"]
+                .get("imageLinks", {})
+                .get("thumbnail", ""),
+                "preview": item["volumeInfo"].get("previewLink", ""),
+            }
+            for item in answer.get("items", [])[:10]
+        ]
+
+        context = {"form": form, "results": result_list}
+        return render(request, "dashboardApp/books.html", context)
+    else:
+        form = DashboardForm()
+        context = {"form": form}
+        return render(request, "dashboardApp/books.html", context)
+
+
+# Dictionaries Views
+def get_dictionaries(request):
+    if request.method == "POST":
+        form = DashboardForm(request.POST)
+        text = request.POST.get("text")
+        url = "https://api.dictionaryapi.dev/api/v2/entries/en_US/" + text
+        r = requests.get(url)
+        answer = r.json()
+
+        try:
+            # Extract data from the API response
+            phonetics = answer[0]["phonetics"][0]["text"]
+            audio = answer[0]["phonetics"][0]["audio"]
+        except (KeyError, IndexError):
+            # Handle the case where the expected fields are not present in the API response
+            phonetics = "Phonetics data not available"
+            audio = "Audio data not available"
+
+        try:
+            definition = answer[0]["meanings"][0]["definitions"][0]["definition"]
+            example = answer[0]["meanings"][0]["definitions"][0]["example"]
+            synonyms = answer[0]["meanings"][0]["definitions"][0]["synonyms"]
+        except (KeyError, IndexError):
+            # Handle the case where the expected fields are not present in the API response
+            definition = "Definition not available"
+            example = "Example not available"
+            synonyms = []
+
+        context = {
+            "form": form,
+            "input": text,  # Changed from "input" to the actual input text
+            "phonetics": phonetics,
+            "audio": audio,
+            "definition": definition,
+            "example": example,
+            "synonyms": synonyms,
+        }
+        return render(request, "dashboardApp/dictionary.html", context)
+
+    else:
+        form = DashboardForm()
+        context = {
+            "form": form,
+        }
+        return render(request, "dashboardApp/dictionary.html", context)
+
+
+# wikipedia
+def wikipedia(request):
+    return render(request, "dashboardApp/wiki.html")

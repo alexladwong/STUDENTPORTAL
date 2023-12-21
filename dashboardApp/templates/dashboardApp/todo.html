@@ -3,6 +3,17 @@
 {% load crispy_forms_tags %}
 
 <div class="container">
+  <h3>
+    Welcome,
+    <i
+      style="
+        text-transform: capitalize;
+        text-decoration: underline;
+        color: blueviolet;
+      "
+      >{{request.user}}</i
+    >
+  </h3>
   {% if not todos_done %}
 
   <table class="table table-striped table-bordered table-hover table-dark">

@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 import requests
+import wikipedia
 from .forms import *
 from django.contrib import messages
 from django.views import generic
@@ -295,5 +296,19 @@ def get_dictionaries(request):
 
 
 # wikipedia
-def wikipedia(request):
-    return render(request, "dashboardApp/wiki.html")
+def wikipedia_page(request):
+    if request.method == "POST":
+        text = request.POST["text"]
+        form = DashboardForm(request.POST)
+        search = wikipedia.page(text)
+        context = {
+            "form": form,
+            "title": search.title,
+            "link": search.url,
+            "details": search.summary,
+        }
+        return render(request, "dashboardApp/wiki.html", context)
+    else:
+        form = DashboardForm()
+        context = {"form": form}
+    return render(request, "dashboardApp/wiki.html", context)

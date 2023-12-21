@@ -17,5 +17,5 @@ urlpatterns = [
     path("delete-todo/<int:pk>", views.delete_todo, name="delete_todo"),
     path("library/", views.Library, name="library"),
     path("dictionary/", views.get_dictionaries, name="dictionary"),
-    path("s-wikipedia/", views.wikipedia, name="wikipedia"),
+    path("s-wikipedia/", views.wikipedia_page, name="wikipedia"),
 ]

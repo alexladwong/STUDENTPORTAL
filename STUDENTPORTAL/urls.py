@@ -30,4 +30,9 @@ urlpatterns = [
         name="login",
     ),
     path("profile/", dash_views.Profile, name="profile"),
+    path(
+        "logged-out/",
+        auth_views.LoginView.as_view(template_name="dashboardApp/logout.html"),
+        name="logged-out",
+    ),
 ]

@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required()
 def home(request):
     return render(request, "dashboardApp/home.html")
 
@@ -95,7 +96,8 @@ def homework(request):
 
 
 # Update Homework
-@login_required()
+
+
 def update_homework(request, pk=None):
     homeworks = Homework.objects.get(id=pk)
 
@@ -108,7 +110,8 @@ def update_homework(request, pk=None):
 
 
 # Delete Homework
-@login_required()
+
+
 def delete_homework(request, pk=None):
     Homework.objects.get(id=pk).delete()
     messages.warning(
@@ -118,7 +121,8 @@ def delete_homework(request, pk=None):
 
 
 # Youtube Researcher
-@login_required()
+
+
 def youtube_researcher(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -152,6 +156,8 @@ def youtube_researcher(request):
 
 
 # Add todo Application
+
+
 @login_required()
 def todo(request):
     todos = Todo.objects.filter(is_finished=False, user=request.user)
@@ -191,7 +197,8 @@ def todo(request):
 
 
 # Update Todo
-@login_required()
+
+
 def update_todo(request, pk=None):
     todo = Todo.objects.get(id=pk)
     if todo.is_finished == True:
@@ -213,7 +220,8 @@ def delete_todo(request, pk=None):
 
 
 # Google Books
-@login_required()
+
+
 def Library(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -409,9 +417,28 @@ def Profile(request):
     else:
         todos_done = False
     context = {
-        "homework": homework,
+        "homeworks": homework,
         "todos": todos,
         "home_done": homework_done,
         "todos_done": todos_done,
     }
     return render(request, "dashboardApp/profile.html", context)
+
+
+# LOGOUT
+def LOGOUT(request):
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get("username")
+            messages.success(
+                request, f"Account Registration completed successfully: {username}"
+            )
+            return redirect("login")
+    else:
+        form = UserRegistrationForm()
+    context = {
+        "form": form,
+    }
+    return render(request, "dashboardApp/logout.html", context)

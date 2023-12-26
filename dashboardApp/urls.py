@@ -18,4 +18,5 @@ urlpatterns = [
     path("library/", views.Library, name="library"),
     path("dictionary/", views.get_dictionaries, name="dictionary"),
     path("s-wikipedia/", views.wikipedia_page, name="wikipedia"),
+    path("conversion/", views.conversion, name="my_conversion"),
 ]

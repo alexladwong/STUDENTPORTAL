@@ -49,6 +49,7 @@ def delete_notes(request, pk=None):
 
 
 # Note Details
+# @login_required()
 class NotesDetailView(generic.DetailView):
     model = Notes
 
@@ -96,8 +97,7 @@ def homework(request):
 
 
 # Update Homework
-
-
+@login_required()
 def update_homework(request, pk=None):
     homeworks = Homework.objects.get(id=pk)
 
@@ -110,8 +110,7 @@ def update_homework(request, pk=None):
 
 
 # Delete Homework
-
-
+@login_required()
 def delete_homework(request, pk=None):
     Homework.objects.get(id=pk).delete()
     messages.warning(
@@ -121,8 +120,6 @@ def delete_homework(request, pk=None):
 
 
 # Youtube Researcher
-
-
 def youtube_researcher(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -197,8 +194,7 @@ def todo(request):
 
 
 # Update Todo
-
-
+@login_required()
 def update_todo(request, pk=None):
     todo = Todo.objects.get(id=pk)
     if todo.is_finished == True:
@@ -220,8 +216,6 @@ def delete_todo(request, pk=None):
 
 
 # Google Books
-
-
 def Library(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -258,6 +252,8 @@ def Library(request):
 
 
 # Dictionaries Views
+
+
 def get_dictionaries(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -305,6 +301,7 @@ def get_dictionaries(request):
 
 
 # wikipedia
+# @login_required()
 def wikipedia_page(request):
     if request.method == "POST":
         text = request.POST["text"]
@@ -405,10 +402,11 @@ def Register(request):
 
 
 # # Profile form
+@login_required()
 def Profile(request):
-    homework = Homework.objects.filter(is_finished=False, user=request.user)
+    homeworks = Homework.objects.filter(is_finished=False, user=request.user)
     todos = Todo.objects.filter(is_finished=False, user=request.user)
-    if len(homework) == 0:
+    if len(homeworks) == 0:
         homework_done = True
     else:
         homework_done = False
@@ -417,7 +415,7 @@ def Profile(request):
     else:
         todos_done = False
     context = {
-        "homeworks": homework,
+        "homeworks": homeworks,
         "todos": todos,
         "home_done": homework_done,
         "todos_done": todos_done,

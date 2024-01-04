@@ -45,10 +45,12 @@
           >
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
               </li>
+              {% if request.user.is_authenticated %}
+
               <li class="nav-item">
-                <a class="nav-link" href="#">Profile</a>
+                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
               </li>
               <li class="nav-item dropdown">
                 <a
@@ -63,32 +65,45 @@
                   Options
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Books</a>
-                  <a class="dropdown-item" href="#">Wikipedia</a>
+                  <a class="dropdown-item" href="{% url 'library' %}">Books</a>
+                  <a class="dropdown-item" href="{% url 'wikipedia' %}"
+                    >Wikipedia</a
+                  >
                   <div class="dropdown-divider"></div>
 
-                  <a class="dropdown-item" href="#">Dictionary</a>
-                  <a class="dropdown-item" href="#">Youtube</a>
+                  <a class="dropdown-item" href="{% url 'dictionary' %}"
+                    >Dictionary</a
+                  >
+                  <a class="dropdown-item" href="{% url 'youtube_researcher' %}"
+                    >Youtube</a
+                  >
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">To-do</a>
-                  <a class="dropdown-item" href="#">Homework</a>
+                  <a class="dropdown-item" href="{% url 'todo' %}">To-do</a>
+                  <a class="dropdown-item" href="{% url 'homework' %}"
+                    >Homework</a
+                  >
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Notes</a>
-                  <a class="dropdown-item" href="#">Conversion</a>
+                  <a class="dropdown-item" href="{% url 'notes' %}">Notes</a>
+                  <a class="dropdown-item" href="{% url 'my_conversion' %}"
+                    >Conversion</a
+                  >
                   <div class="dropdown-divider"></div>
                 </div>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" href="{% url 'logged-out' %}">Logout</a>
+              </li>
+              {% else %}
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Register</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Login</a>
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
               </li>
             </ul>
+            {% endif %}
           </div>
         </div>
       </nav>
@@ -111,4 +126,20 @@
       crossorigin="anonymous"
     ></script>
   </body>
+
+  <br /><br />
+  <div class="footer">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Student Study Portal</a>
+
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarSupportedContent"
+        >
+          <a href=""><h6 style="color: #fff">&copy; 2024 mrdollarsinc</h6></a>
+        </div>
+      </div>
+    </nav>
+  </div>
 </html>

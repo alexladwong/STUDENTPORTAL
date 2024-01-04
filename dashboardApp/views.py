@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required()
 def home(request):
     return render(request, "dashboardApp/home.html")
 
@@ -48,6 +49,7 @@ def delete_notes(request, pk=None):
 
 
 # Note Details
+# @login_required()
 class NotesDetailView(generic.DetailView):
     model = Notes
 
@@ -118,7 +120,6 @@ def delete_homework(request, pk=None):
 
 
 # Youtube Researcher
-@login_required()
 def youtube_researcher(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -152,8 +153,11 @@ def youtube_researcher(request):
 
 
 # Add todo Application
+
+
 @login_required()
 def todo(request):
+    todos = Todo.objects.filter(is_finished=False, user=request.user)
     if request.method == "POST":
         form = TodoForm(request.POST)
         if form.is_valid():
@@ -212,7 +216,6 @@ def delete_todo(request, pk=None):
 
 
 # Google Books
-@login_required()
 def Library(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -249,6 +252,8 @@ def Library(request):
 
 
 # Dictionaries Views
+
+
 def get_dictionaries(request):
     if request.method == "POST":
         form = DashboardForm(request.POST)
@@ -296,6 +301,7 @@ def get_dictionaries(request):
 
 
 # wikipedia
+# @login_required()
 def wikipedia_page(request):
     if request.method == "POST":
         text = request.POST["text"]
@@ -312,3 +318,125 @@ def wikipedia_page(request):
         form = DashboardForm()
         context = {"form": form}
     return render(request, "dashboardApp/wiki.html", context)
+
+
+# Conversion functions
+def conversion(request):
+    if request.method == "POST":
+        form = ConversionForm(request.POST)
+        if request.POST["measurement"] == "mass":
+            measurement_form = ConversionMassForm()
+            context = {
+                "form": form,
+                "m_form": measurement_form,
+                "input": True,
+            }
+            if "input" in request.POST:
+                first = request.POST["measure1"]
+                second = request.POST["measure2"]
+                input = request.POST["input"]
+                answer = ""
+                if input and int(input) >= 0:
+                    if first == "pound" and second == "kilogram":
+                        answer = f"{input} pound = {int(input)*0.453592} kilogram"
+                    if first == "kilogram" and second == "pound":
+                        answer = f"{input} kilogram = {int(input)*2.2062} pound"
+                context = {
+                    "form": form,
+                    "m_form": measurement_form,
+                    "input": True,
+                    "answer": answer,
+                }
+
+        else:
+            if request.POST["measurement"] == "length":
+                measurement_form = ConversionLengthForm()
+            context = {
+                "form": form,
+                "m_form": measurement_form,
+                "input": True,
+            }
+            if "input" in request.POST:
+                first = request.POST["measure1"]
+                second = request.POST["measure2"]
+                input = request.POST["input"]
+                answer = ""
+                if input and int(input) >= 0:
+                    if first == "yard" and second == "foot":
+                        answer = f"{input} yard = {int(input)*3} foot"
+                    if first == "foot" and second == "yard":
+                        answer = f"{input} foot = {int(input)/3} yard"
+                context = {
+                    "form": form,
+                    "m_form": measurement_form,
+                    "input": True,
+                    "answer": answer,
+                }
+
+    else:
+        form = ConversionForm()
+        context = {
+            "form": form,
+            "input": False,
+        }
+    return render(request, "dashboardApp/conversion.html", context)
+
+
+# Register Form``
+def Register(request):
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get("username")
+            messages.success(
+                request, f"Account Registration completed successfully: {username}"
+            )
+            return redirect("login")
+    else:
+        form = UserRegistrationForm()
+    context = {
+        "form": form,
+    }
+    return render(request, "dashboardApp/register.html", context)
+
+
+# # Profile form
+@login_required()
+def Profile(request):
+    homeworks = Homework.objects.filter(is_finished=False, user=request.user)
+    todos = Todo.objects.filter(is_finished=False, user=request.user)
+    if len(homeworks) == 0:
+        homework_done = True
+    else:
+        homework_done = False
+    if len(todos) == 0:
+        todos_done = True
+    else:
+        todos_done = False
+    context = {
+        "homeworks": homeworks,
+        "todos": todos,
+        "home_done": homework_done,
+        "todos_done": todos_done,
+    }
+    return render(request, "dashboardApp/profile.html", context)
+
+
+# LOGOUT
+def LOGOUT(request):
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get("username")
+            messages.success(
+                request, f"Account Registration completed successfully: {username}"
+            )
+            return redirect("login")
+    else:
+        form = UserRegistrationForm()
+    context = {
+        "form": form,
+    }
+    return render(request, "dashboardApp/logout.html", context)

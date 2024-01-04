@@ -130,8 +130,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-
-LOGIN_REQUIRED_URLS = (
-    r"/private_stuff/(.*)$",
-    r"/login_required/(.*)$",
-)
+LOGIN_REDIRECT_URL = "home"
+LOGIN_URL = "login"
